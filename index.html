@@ -187,11 +187,18 @@
     </div>
 
     <script>
-        // Set your launch date here
-        const launchDate = new Date();
-        launchDate.setMonth(launchDate.getMonth() + 1);
+        // Store launch date in localStorage if not already set
+        if (!localStorage.getItem('launchDate')) {
+            const initialDate = new Date();
+            initialDate.setMonth(initialDate.getMonth() + 1);
+            localStorage.setItem('launchDate', initialDate.toISOString());
+        }
+        
+        // Alternatively, set a specific launch date (uncomment and modify the line below)
+        // localStorage.setItem('launchDate', '2024-12-31T23:59:59');
         
         function updateCountdown() {
+            const launchDate = new Date(localStorage.getItem('launchDate'));
             const now = new Date();
             const timeLeft = launchDate - now;
             
@@ -202,16 +209,21 @@
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
             
             // Update DOM
-            document.getElementById('days').textContent = String(days).padStart(2, '0');
-            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
-            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
-            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            document.getElementById('days').textContent = String(Math.max(0, days)).padStart(2, '0');
+            document.getElementById('hours').textContent = String(Math.max(0, hours)).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(Math.max(0, minutes)).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(Math.max(0, seconds)).padStart(2, '0');
             
             // Update progress bar
             const totalTime = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
             const elapsed = totalTime - timeLeft;
             const progress = (elapsed / totalTime) * 100;
             document.getElementById('progress').style.width = `${Math.max(0, Math.min(100, progress))}%`;
+            
+            // Optional: Add message when countdown reaches zero
+            if (timeLeft < 0) {
+                document.querySelector('.subtitle').textContent = "Launch time has arrived!";
+            }
         }
 
         // Update countdown every second

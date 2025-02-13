@@ -1,18 +1,3 @@
-<?php
-// Set the launch date (1 month from now)
-$launchDate = strtotime('+1 month');
-$currentTime = time();
-$timeLeft = $launchDate - $currentTime;
-
-$days = floor($timeLeft / (60 * 60 * 24));
-$hours = floor(($timeLeft % (60 * 60 * 24)) / (60 * 60));
-$minutes = floor(($timeLeft % (60 * 60)) / 60);
-$seconds = $timeLeft % 60;
-
-// Calculate progress percentage
-$totalTime = 30 * 24 * 60 * 60; // 30 days in seconds
-$progress = (($totalTime - $timeLeft) / $totalTime) * 100;
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -44,12 +29,12 @@ $progress = (($totalTime - $timeLeft) / $totalTime) * 100;
             align-items: center;
             text-align: center;
             padding: 1rem;
+            overflow-x: hidden;
         }
 
         .container {
             max-width: 800px;
             padding: 2rem;
-            backdrop-filter: blur(10px);
             background: rgba(255, 255, 255, 0.03);
             border-radius: 20px;
             box-shadow: 0 8px 32px var(--shadow-color);
@@ -128,7 +113,7 @@ $progress = (($totalTime - $timeLeft) / $totalTime) * 100;
         }
 
         .loading-progress {
-            width: <?php echo $progress; ?>%;
+            width: 0%;
             height: 100%;
             background: var(--accent-gradient);
             border-radius: 3px;
@@ -178,51 +163,60 @@ $progress = (($totalTime - $timeLeft) / $totalTime) * 100;
         <p class="subtitle">Something amazing is in the works</p>
         <div class="countdown">
             <div class="countdown-item">
-                <span class="countdown-number"><?php echo str_pad($days, 2, '0', STR_PAD_LEFT); ?></span>
+                <span class="countdown-number" id="days">00</span>
                 <span class="countdown-label">Days</span>
             </div>
             <div class="countdown-item">
-                <span class="countdown-number"><?php echo str_pad($hours, 2, '0', STR_PAD_LEFT); ?></span>
+                <span class="countdown-number" id="hours">00</span>
                 <span class="countdown-label">Hours</span>
             </div>
             <div class="countdown-item">
-                <span class="countdown-number"><?php echo str_pad($minutes, 2, '0', STR_PAD_LEFT); ?></span>
+                <span class="countdown-number" id="minutes">00</span>
                 <span class="countdown-label">Minutes</span>
             </div>
             <div class="countdown-item">
-                <span class="countdown-number"><?php echo str_pad($seconds, 2, '0', STR_PAD_LEFT); ?></span>
+                <span class="countdown-number" id="seconds">00</span>
                 <span class="countdown-label">Seconds</span>
             </div>
         </div>
         <div class="progress-container">
             <div class="loading-bar">
-                <div class="loading-progress"></div>
+                <div class="loading-progress" id="progress"></div>
             </div>
         </div>
     </div>
 
     <script>
-    // Update the countdown every second without page reload
-    function updateCountdown() {
-        fetch(window.location.href)
-            .then(response => response.text())
-            .then(html => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(html, 'text/html');
-                
-                // Update countdown numbers
-                document.querySelectorAll('.countdown-number').forEach((el, i) => {
-                    el.textContent = doc.querySelectorAll('.countdown-number')[i].textContent;
-                });
-                
-                // Update progress bar
-                const newProgress = doc.querySelector('.loading-progress').style.width;
-                document.querySelector('.loading-progress').style.width = newProgress;
-            });
-    }
+        // Set your launch date here
+        const launchDate = new Date();
+        launchDate.setMonth(launchDate.getMonth() + 1);
+        
+        function updateCountdown() {
+            const now = new Date();
+            const timeLeft = launchDate - now;
+            
+            // Calculate time units
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            
+            // Update DOM
+            document.getElementById('days').textContent = String(days).padStart(2, '0');
+            document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+            
+            // Update progress bar
+            const totalTime = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+            const elapsed = totalTime - timeLeft;
+            const progress = (elapsed / totalTime) * 100;
+            document.getElementById('progress').style.width = `${Math.max(0, Math.min(100, progress))}%`;
+        }
 
-    // Update every second
-    setInterval(updateCountdown, 1000);
+        // Update countdown every second
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); // Initial update
     </script>
 </body>
 </html>

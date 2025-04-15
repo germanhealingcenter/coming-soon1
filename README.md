@@ -7,7 +7,7 @@ Line 551 is to set the launch date! (24hour time system!)
         const launchDate = new Date('2025-05-15T15:00:00');
 
 
-Timeline Settings:
+Timeline Settings (for code snippet check: README.md):
 
 Done: <div class="timeline-icon completed">✔</div>
 

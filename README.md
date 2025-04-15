@@ -11,7 +11,7 @@ Timeline Settings (for code snippet check: README.md):
 
 Done: <div class="timeline-icon completed">✔</div>
 
-In Work: <div class="timeline-icon in-progress">✗</div>
+In Work: <div class="timeline-icon in-progress">-</div>
 
 Not Done: <div class="timeline-icon not-started">✗</div>
 

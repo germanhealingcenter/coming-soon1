@@ -121,6 +121,16 @@
             animation: shimmer 2s infinite linear;
         }
 
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -186,9 +196,9 @@
         </div>
     </div>
 
-    <!-- Import confetti library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
-    
+    <!-- Canvas for confetti -->
+    <canvas id="confetti-canvas"></canvas>
+
     <script>
         // Set a fixed launch date - May 15th, 2025 at 3PM
         const launchDate = new Date('2025-05-15T15:00:00');
@@ -209,47 +219,108 @@
             document.getElementById('minutes').textContent = String(Math.max(0, minutes)).padStart(2, '0');
             document.getElementById('seconds').textContent = String(Math.max(0, seconds)).padStart(2, '0');
             
-            // Calculate total time from now until May 15th (approximately 30 days)
-            const totalTimeFromNow = launchDate - new Date();
-            const totalTime = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
+            // Calculate total time (30 days in milliseconds)
+            const totalTime = 30 * 24 * 60 * 60 * 1000; 
             
-            // Calculate elapsed time (percentage of time passed)
-            const elapsed = totalTime - totalTimeFromNow;
+            // Calculate progress percentage based on time elapsed since April 15, 2025
+            const startDate = new Date('2025-04-15T00:00:00');
+            const elapsed = now - startDate;
             const progress = (elapsed / totalTime) * 100;
             document.getElementById('progress').style.width = `${Math.max(0, Math.min(100, progress))}%`;
             
-            // Optional: Add message when countdown reaches zero
+            // Message when countdown reaches zero
             if (timeLeft < 0) {
                 document.querySelector('.subtitle').textContent = "Launch time has arrived!";
             }
         }
 
-        // Create confetti explosion when page loads
-        window.onload = function() {
-            // Fire confetti
-            confetti({
-                particleCount: 150,
-                spread: 180,
-                origin: { y: 0.6 }
-            });
+        // Custom confetti implementation (no external library needed)
+        document.addEventListener('DOMContentLoaded', function() {
+            const canvas = document.getElementById('confetti-canvas');
+            const ctx = canvas.getContext('2d');
             
-            // Additional confetti for more effect
-            setTimeout(() => {
-                confetti({
-                    particleCount: 100,
-                    angle: 60,
-                    spread: 100,
-                    origin: { x: 0 }
+            // Set canvas dimensions to window size
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            
+            // Confetti particles
+            const particles = [];
+            const particleCount = 150;
+            const gravity = 0.5;
+            const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c'];
+            
+            // Create particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 8 + 3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    rotation: Math.random() * 360,
+                    speed: Math.random() * 3 + 1,
+                    rotationSpeed: Math.random() * 5 - 2.5,
+                    oscillationSpeed: Math.random() * 2,
+                    angle: Math.random() * 360,
+                    direction: Math.random() * 360
                 });
+            }
+            
+            // Animation function
+            function animate() {
+                // Clear canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                confetti({
-                    particleCount: 100,
-                    angle: 120,
-                    spread: 100,
-                    origin: { x: 1 }
-                });
-            }, 250);
-        };
+                // Update particles
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    
+                    // Move particles
+                    p.y += p.speed;
+                    p.x += Math.sin(p.angle) * 2;
+                    p.angle += p.oscillationSpeed;
+                    p.rotation += p.rotationSpeed;
+                    
+                    // Draw particle
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation * Math.PI / 180);
+                    
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    if (Math.random() < 0.5) {
+                        // Rectangle
+                        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    } else {
+                        // Circle
+                        ctx.arc(0, 0, p.size / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                    ctx.closePath();
+                    ctx.restore();
+                    
+                    // Reset particle when it goes off screen
+                    if (p.y > canvas.height) {
+                        particles[i] = {
+                            x: Math.random() * canvas.width,
+                            y: -10,
+                            size: Math.random() * 8 + 3,
+                            color: colors[Math.floor(Math.random() * colors.length)],
+                            rotation: Math.random() * 360,
+                            speed: Math.random() * 3 + 1,
+                            rotationSpeed: Math.random() * 5 - 2.5,
+                            oscillationSpeed: Math.random() * 2,
+                            angle: Math.random() * 360,
+                            direction: Math.random() * 360
+                        };
+                    }
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // Start animation
+            animate();
+        });
 
         // Update countdown every second
         setInterval(updateCountdown, 1000);

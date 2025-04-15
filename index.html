@@ -186,19 +186,14 @@
         </div>
     </div>
 
+    <!-- Import confetti library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/canvas-confetti/1.6.0/confetti.browser.min.js"></script>
+    
     <script>
-        // Store launch date in localStorage if not already set
-        if (!localStorage.getItem('launchDate')) {
-            const initialDate = new Date();
-            initialDate.setMonth(initialDate.getMonth() + 1);
-            localStorage.setItem('launchDate', initialDate.toISOString());
-        }
-        
-        // Alternatively, set a specific launch date (uncomment and modify the line below)
-        localStorage.setItem('launchDate', '2025-04-15T23:59:59');
+        // Set a fixed launch date - May 15th, 2025 at 3PM
+        const launchDate = new Date('2025-05-15T15:00:00');
         
         function updateCountdown() {
-            const launchDate = new Date(localStorage.getItem('launchDate'));
             const now = new Date();
             const timeLeft = launchDate - now;
             
@@ -214,9 +209,12 @@
             document.getElementById('minutes').textContent = String(Math.max(0, minutes)).padStart(2, '0');
             document.getElementById('seconds').textContent = String(Math.max(0, seconds)).padStart(2, '0');
             
-            // Update progress bar
+            // Calculate total time from now until May 15th (approximately 30 days)
+            const totalTimeFromNow = launchDate - new Date();
             const totalTime = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
-            const elapsed = totalTime - timeLeft;
+            
+            // Calculate elapsed time (percentage of time passed)
+            const elapsed = totalTime - totalTimeFromNow;
             const progress = (elapsed / totalTime) * 100;
             document.getElementById('progress').style.width = `${Math.max(0, Math.min(100, progress))}%`;
             
@@ -225,6 +223,33 @@
                 document.querySelector('.subtitle').textContent = "Launch time has arrived!";
             }
         }
+
+        // Create confetti explosion when page loads
+        window.onload = function() {
+            // Fire confetti
+            confetti({
+                particleCount: 150,
+                spread: 180,
+                origin: { y: 0.6 }
+            });
+            
+            // Additional confetti for more effect
+            setTimeout(() => {
+                confetti({
+                    particleCount: 100,
+                    angle: 60,
+                    spread: 100,
+                    origin: { x: 0 }
+                });
+                
+                confetti({
+                    particleCount: 100,
+                    angle: 120,
+                    spread: 100,
+                    origin: { x: 1 }
+                });
+            }, 250);
+        };
 
         // Update countdown every second
         setInterval(updateCountdown, 1000);

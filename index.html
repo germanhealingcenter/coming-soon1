@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coming Soon</title>
+    <title>German Healing Center - Coming Soon</title>
     <style>
         :root {
             --primary-gradient: linear-gradient(135deg, #1a1c20 0%, #0f1115 100%);
@@ -25,11 +25,63 @@
             color: var(--text-color);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            padding: 1rem 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 1rem;
-            overflow-x: hidden;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        nav ul li a:hover, nav ul li a.active {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--accent-color);
+        }
+
+        main {
+            flex: 1;
+            padding-top: 80px;
+        }
+
+        section {
+            min-height: 100vh;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        section.active {
+            display: flex;
         }
 
         .container {
@@ -42,7 +94,7 @@
         }
 
         h1 {
-            font-size: 4rem;
+            font-size: 3.5rem;
             margin-bottom: 1.5rem;
             letter-spacing: 4px;
             background: var(--accent-gradient);
@@ -121,13 +173,92 @@
             animation: shimmer 2s infinite linear;
         }
 
+        .about-container {
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px var(--shadow-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--accent-color);
+            margin-bottom: 1rem;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .profile-name {
+            font-size: 2rem;
+            margin: 0.5rem 0;
+            color: white;
+        }
+
+        .profile-title {
+            font-size: 1.2rem;
+            color: #ddd;
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-location {
+            font-size: 1rem;
+            color: #bbb;
+            margin-bottom: 1rem;
+        }
+
+        .profile-company {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 1rem 0;
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+
+        .profile-company-name {
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        .bio {
+            line-height: 1.6;
+            color: #ddd;
+            text-align: left;
+            margin-top: 1rem;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding-right: 1rem;
+        }
+
+        .bio p {
+            margin-bottom: 1rem;
+        }
+
         canvas {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1000;
+            z-index: 1;
             pointer-events: none;
         }
 
@@ -164,40 +295,91 @@
             .countdown-number {
                 font-size: 2rem;
             }
+
+            .about-container {
+                padding: 1rem;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Coming Soon</h1>
-        <p class="subtitle">Something amazing is in the works</p>
-        <div class="countdown">
-            <div class="countdown-item">
-                <span class="countdown-number" id="days">00</span>
-                <span class="countdown-label">Days</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="hours">00</span>
-                <span class="countdown-label">Hours</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="minutes">00</span>
-                <span class="countdown-label">Minutes</span>
-            </div>
-            <div class="countdown-item">
-                <span class="countdown-number" id="seconds">00</span>
-                <span class="countdown-label">Seconds</span>
-            </div>
-        </div>
-        <div class="progress-container">
-            <div class="loading-bar">
-                <div class="loading-progress" id="progress"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Canvas for confetti -->
     <canvas id="confetti-canvas"></canvas>
+    
+    <header>
+        <nav>
+            <ul>
+                <li><a href="#home" class="nav-link active">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="active">
+            <div class="container">
+                <h1>Coming Soon</h1>
+                <p class="subtitle">German Healing Center</p>
+                <div class="countdown">
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="days">00</span>
+                        <span class="countdown-label">Days</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="hours">00</span>
+                        <span class="countdown-label">Hours</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="minutes">00</span>
+                        <span class="countdown-label">Minutes</span>
+                    </div>
+                    <div class="countdown-item">
+                        <span class="countdown-number" id="seconds">00</span>
+                        <span class="countdown-label">Seconds</span>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="loading-bar">
+                        <div class="loading-progress" id="progress"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="Staff">
+            <div class="about-container">
+                <div class="profile-header">
+                    <div class="profile-image">MK</div>
+                    <h2 class="profile-name">Marco Kruger</h2>
+                    <p class="profile-title">Heiler, Berater, Therapeut und Begleiter</p>
+                    <p class="profile-location">Palm Coast, Florida, United States</p>
+                    <div class="profile-company">
+                        <span class="profile-company-name">GERMAN HEALING CENTER</span>
+                    </div>
+                </div>
+                
+                <div class="bio">
+                    <h3>Let me introduce myself</h3>
+                    <p>My name is Marco Kruger. I was born in Germany in 1971 and am the father of two adult children. I have always been authentic, honest, and reliable, and I place great importance on quality in everything I do.</p>
+                    
+                    <p>My childhood was filled with friendships, adventures, and special experiences. However, I often felt different from others—a feeling that accompanied me throughout my life. I sensed that there was more beyond the visible—a hidden energy, a deeper connection. Without a religious background, I later realized that it was not God but rather my soul and a higher power guiding me.</p>
+                    
+                    <p>Until the age of 43, I led a stable life in Germany. Then, everything began to change. Today, this process is known as an "awakening."</p>
+                    
+                    <p>Through a unique circumstance, I was introduced to yoga, psychology, prana, reiki, etc. A passion ignited within me—an insatiable thirst for knowledge. At the time, I was a successful entrepreneur, but my newfound world of insights fascinated me so much that I neglected my business. Within a year, I faced bankruptcy and unemployment. But I didn't care at all. The economic downfall was inevitable—yet, for the first time, I was truly free to pursue my deepest interests.</p>
+                    
+                    <p>I delved into research, gathered knowledge, and eventually encountered a true medium—someone who could communicate with the unseen world but did not know why. For years, I asked this medium thousands of questions, and she received answers from another dimension that revealed an entirely new world to me.</p>
+                    
+                    <p>Over time, the puzzle pieces of knowledge came together. My perception of reality changed drastically. I became vegan, discovered the true diet of humans, and deepened my understanding of fitness, natural healing methods based on the laws of nature, and the body's energy. At the same time, I began to read people, recognize their challenges, and understand them on a deeper level. Spirituality brought clarity and connected all these insights together.</p>
+                    
+                    <p>After years of intensive study and practical experience, I knew I had to share this knowledge. Together with the medium, I founded a counseling center in Germany and created several websites to spread awareness. For the first two years, we worked completely free of charge, helping thousands of people facing life challenges.</p>
+                    
+                    <p>But my path led me further. A deep inner feeling pulled me to the United States—a decision that once again transformed my life.</p>
+                    
+                    <p>Today, I am here to share my knowledge with those who are ready to transform their lives. With those who seek clarity, health, and true happiness.</p>
+                </div>
+            </div>
+        </section>
+    </main>
 
     <script>
         // Set a fixed launch date - May 15th, 2025 at 3PM
@@ -230,11 +412,32 @@
             
             // Message when countdown reaches zero
             if (timeLeft < 0) {
-                document.querySelector('.subtitle').textContent = "Launch time has arrived!";
+                document.querySelector('.subtitle').textContent = "We are now open!";
             }
         }
 
-        // Custom confetti implementation (no external library needed)
+        // Navigation
+        const navLinks = document.querySelectorAll('.nav-link');
+        const sections = document.querySelectorAll('section');
+        
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Remove active class from all links and sections
+                navLinks.forEach(l => l.classList.remove('active'));
+                sections.forEach(s => s.classList.remove('active'));
+                
+                // Add active class to clicked link
+                link.classList.add('active');
+                
+                // Show corresponding section
+                const targetId = link.getAttribute('href').substring(1);
+                document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // Custom confetti implementation
         document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('confetti-canvas');
             const ctx = canvas.getContext('2d');
@@ -243,10 +446,15 @@
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+            
             // Confetti particles
             const particles = [];
-            const particleCount = 150;
-            const gravity = 0.5;
+            const particleCount = 100;
             const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c'];
             
             // Create particles
@@ -260,8 +468,7 @@
                     speed: Math.random() * 3 + 1,
                     rotationSpeed: Math.random() * 5 - 2.5,
                     oscillationSpeed: Math.random() * 2,
-                    angle: Math.random() * 360,
-                    direction: Math.random() * 360
+                    angle: Math.random() * 360
                 });
             }
             
@@ -309,8 +516,7 @@
                             speed: Math.random() * 3 + 1,
                             rotationSpeed: Math.random() * 5 - 2.5,
                             oscillationSpeed: Math.random() * 2,
-                            angle: Math.random() * 360,
-                            direction: Math.random() * 360
+                            angle: Math.random() * 360
                         };
                     }
                 }

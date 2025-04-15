@@ -20,24 +20,24 @@
         }
 
         h1, .subtitle {
-                text-align: center;
-                width: 100%;
+            text-align: center;
+            width: 100%;
         }
-        
+
         .profile-image img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                    border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
         }
-        
+
         .container {
-                text-align: center;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
             background: var(--primary-gradient);
@@ -120,7 +120,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             animation: fadeInDown 1s ease-out;
-            align-items: center;
         }
 
         .subtitle {
@@ -128,7 +127,6 @@
             margin-bottom: 3rem;
             opacity: 0.8;
             animation: fadeIn 1s ease-out 0.5s both;
-            align-items: center;
         }
 
         .countdown {
@@ -273,6 +271,81 @@
             margin-bottom: 1rem;
         }
 
+        .timeline-container {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin: 2rem 0;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(50px) rotateX(-15deg);
+            transition: all 0.6s ease-out;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0) rotateX(0);
+        }
+
+        .timeline-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-icon:hover {
+            transform: scale(1.2);
+        }
+
+        .timeline-icon.completed {
+            background: #2ecc71;
+        }
+
+        .timeline-icon.in-progress {
+            background: #f39c12;
+            animation: pulse 2s infinite;
+        }
+
+        .timeline-icon.not-started {
+            background: #e74c3c;
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 10px;
+            flex: 1;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .timeline-content h3 {
+            margin-bottom: 0.5rem;
+            color: var(--accent-color);
+        }
+
+        .timeline-content p {
+            color: #ddd;
+        }
+
         canvas {
             position: fixed;
             top: 0;
@@ -298,6 +371,12 @@
             100% { background-position: 200% 0; }
         }
 
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
         @media (max-width: 768px) {
             .countdown {
                 flex-wrap: wrap;
@@ -320,17 +399,28 @@
             .staff-container {
                 padding: 1rem;
             }
+
+            .timeline-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .timeline-icon {
+                margin-bottom: 1rem;
+                margin-right: 0;
+            }
         }
     </style>
 </head>
 <body>
     <canvas id="confetti-canvas"></canvas>
-    
+
     <header>
         <nav>
             <ul>
                 <li><a href="#home" class="nav-link active">Home</a></li>
                 <li><a href="#staff" class="nav-link">Staff</a></li>
+                <li><a href="#timeline" class="nav-link">Timeline</a></li>
             </ul>
         </nav>
     </header>
@@ -370,8 +460,8 @@
             <div class="staff-container">
                 <div class="profile-header">
                     <div class="profile-image">
-                    <img src="https://media.licdn.com/dms/image/v2/D4D03AQGIXEdL-mVYhQ/profile-displayphoto-shrink_200_200/B4DZWZGeHHG8Ag-/0/1742030366034?e=2147483647&v=beta&t=dSmfnCSF_v3efrjme2-oudVqJo9w5Mmab00FcQqwCkI" alt="Marco Kruger">
-</div>
+                        <img src="https://media.licdn.com/dms/image/v2/D4D03AQGIXEdL-mVYhQ/profile-displayphoto-shrink_200_200/B4DZWZGeHHG8Ag-/0/1742030366034?e=2147483647&v=beta&t=dSmfnCSF_v3efrjme2-oudVqJo9w5Mmab00FcQqwCkI" alt="Marco Kruger">
+                    </div>
                     <h2 class="profile-name">Marco Kruger</h2>
                     <p class="profile-title">Healer, Consultant, Therapist und Companion</p>
                     <p class="profile-location">Palm Coast, Florida, United States</p>
@@ -379,26 +469,79 @@
                         <span class="profile-company-name">GERMAN HEALING CENTER</span>
                     </div>
                 </div>
-                
+
                 <div class="bio">
                     <h3>Let me introduce myself</h3>
                     <p>My name is Marco Kruger. I was born in Germany in 1971 and am the father of two adult children. I have always been authentic, honest, and reliable, and I place great importance on quality in everything I do.</p>
-                    
+
                     <p>My childhood was filled with friendships, adventures, and special experiences. However, I often felt different from others—a feeling that accompanied me throughout my life. I sensed that there was more beyond the visible—a hidden energy, a deeper connection. Without a religious background, I later realized that it was not God but rather my soul and a higher power guiding me.</p>
-                    
+
                     <p>Until the age of 43, I led a stable life in Germany. Then, everything began to change. Today, this process is known as an "awakening."</p>
-                    
+
                     <p>Through a unique circumstance, I was introduced to yoga, psychology, prana, reiki, etc. A passion ignited within me—an insatiable thirst for knowledge. At the time, I was a successful entrepreneur, but my newfound world of insights fascinated me so much that I neglected my business. Within a year, I faced bankruptcy and unemployment. But I didn't care at all. The economic downfall was inevitable—yet, for the first time, I was truly free to pursue my deepest interests.</p>
-                    
+
                     <p>I delved into research, gathered knowledge, and eventually encountered a true medium—someone who could communicate with the unseen world but did not know why. For years, I asked this medium thousands of questions, and she received answers from another dimension that revealed an entirely new world to me.</p>
-                    
+
                     <p>Over time, the puzzle pieces of knowledge came together. My perception of reality changed drastically. I became vegan, discovered the true diet of humans, and deepened my understanding of fitness, natural healing methods based on the laws of nature, and the body's energy. At the same time, I began to read people, recognize their challenges, and understand them on a deeper level. Spirituality brought clarity and connected all these insights together.</p>
-                    
+
                     <p>After years of intensive study and practical experience, I knew I had to share this knowledge. Together with the medium, I founded a counseling center in Germany and created several websites to spread awareness. For the first two years, we worked completely free of charge, helping thousands of people facing life challenges.</p>
-                    
+
                     <p>But my path led me further. A deep inner feeling pulled me to the United States—a decision that once again transformed my life.</p>
-                    
+
                     <p>Today, I am here to share my knowledge with those who are ready to transform their lives. With those who seek clarity, health, and true happiness.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="timeline">
+            <div class="container">
+                <h1>Project Timeline</h1>
+                <p class="subtitle">Our Progress Towards Launch</p>
+                <div class="timeline-container">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-icon completed">✔</div>
+                            <div class="timeline-content">
+                                <h3>Base Design Completion</h3>
+                                <p>Completed the core design and layout for the German Healing Center website.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon completed">✔</div>
+                            <div class="timeline-content">
+                                <h3>Initial Pages Development</h3>
+                                <p>Built foundational pages including Home and Staff sections.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon completed">✔</div>
+                            <div class="timeline-content">
+                                <h3>Blog Pages Creation</h3>
+                                <p>Developed and integrated blog functionality for content sharing.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon in-progress">-</div>
+                            <div class="timeline-content">
+                                <h3>Chat System Development</h3>
+                                <p>Currently working on implementing a chat system for support and consultation.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon in-progress">-</div>
+                            <div class="timeline-content">
+                                <h3>Final Page Completion</h3>
+                                <p>Remaining planned pages to be completed before launch.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-icon in-progress">-</div>
+                            <div class="timeline-content">
+                                <h3>Finalize Basic Website Building for Release</h3>
+                                <p>Complete all necessary website components and optimizations for the official launch.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -407,32 +550,32 @@
     <script>
         // Set a fixed launch date - May 15th, 2025 at 3PM
         const launchDate = new Date('2025-05-15T15:00:00');
-        
+
         function updateCountdown() {
             const now = new Date();
             const timeLeft = launchDate - now;
-            
+
             // Calculate time units
             const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
-            
+
             // Update DOM
             document.getElementById('days').textContent = String(Math.max(0, days)).padStart(2, '0');
             document.getElementById('hours').textContent = String(Math.max(0, hours)).padStart(2, '0');
             document.getElementById('minutes').textContent = String(Math.max(0, minutes)).padStart(2, '0');
             document.getElementById('seconds').textContent = String(Math.max(0, seconds)).padStart(2, '0');
-            
+
             // Calculate total time (30 days in milliseconds)
-            const totalTime = 30 * 24 * 60 * 60 * 1000; 
-            
+            const totalTime = 30 * 24 * 60 * 60 * 1000;
+
             // Calculate progress percentage based on time elapsed since April 15, 2025
             const startDate = new Date('2025-04-15T00:00:00');
             const elapsed = now - startDate;
             const progress = (elapsed / totalTime) * 100;
             document.getElementById('progress').style.width = `${Math.max(0, Math.min(100, progress))}%`;
-            
+
             // Message when countdown reaches zero
             if (timeLeft < 0) {
                 document.querySelector('.subtitle').textContent = "We are now open!";
@@ -442,21 +585,38 @@
         // Navigation
         const navLinks = document.querySelectorAll('.nav-link');
         const sections = document.querySelectorAll('section');
-        
+
         navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-                
+
                 // Remove active class from all links and sections
                 navLinks.forEach(l => l.classList.remove('active'));
                 sections.forEach(s => s.classList.remove('active'));
-                
+
                 // Add active class to clicked link
                 link.classList.add('active');
-                
+
                 // Show corresponding section
                 const targetId = link.getAttribute('href').substring(1);
                 document.getElementById(targetId).classList.add('active');
+            });
+        });
+
+        // Timeline animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const timelineItems = document.querySelectorAll('.timeline-item');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.2 });
+
+            timelineItems.forEach(item => {
+                observer.observe(item);
             });
         });
 
@@ -464,22 +624,22 @@
         document.addEventListener('DOMContentLoaded', function() {
             const canvas = document.getElementById('confetti-canvas');
             const ctx = canvas.getContext('2d');
-            
+
             // Set canvas dimensions to window size
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-            
+
             // Handle window resize
             window.addEventListener('resize', () => {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
             });
-            
+
             // Confetti particles
             const particles = [];
             const particleCount = 100;
             const colors = ['#3498db', '#2ecc71', '#e74c3c', '#f39c12', '#9b59b6', '#1abc9c'];
-            
+
             // Create particles
             for (let i = 0; i < particleCount; i++) {
                 particles.push({
@@ -494,27 +654,27 @@
                     angle: Math.random() * 360
                 });
             }
-            
+
             // Animation function
             function animate() {
                 // Clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
+
                 // Update particles
                 for (let i = 0; i < particles.length; i++) {
                     const p = particles[i];
-                    
+
                     // Move particles
                     p.y += p.speed;
                     p.x += Math.sin(p.angle) * 2;
                     p.angle += p.oscillationSpeed;
                     p.rotation += p.rotationSpeed;
-                    
+
                     // Draw particle
                     ctx.save();
                     ctx.translate(p.x, p.y);
                     ctx.rotate(p.rotation * Math.PI / 180);
-                    
+
                     ctx.fillStyle = p.color;
                     ctx.beginPath();
                     if (Math.random() < 0.5) {
@@ -527,7 +687,7 @@
                     }
                     ctx.closePath();
                     ctx.restore();
-                    
+
                     // Reset particle when it goes off screen
                     if (p.y > canvas.height) {
                         particles[i] = {
@@ -543,10 +703,10 @@
                         };
                     }
                 }
-                
+
                 requestAnimationFrame(animate);
             }
-            
+
             // Start animation
             animate();
         });

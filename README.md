@@ -8,10 +8,10 @@ Line 551 is to set the launch date! (24hour time system!)
 
 
 Timeline Settings:
-<text>
-Done: <div class="timeline-icon completed">✔</div>
 
-In Work: <div class="timeline-icon in-progress">✗</div>
+==Done: <div class="timeline-icon completed">✔</div>==
 
-Not Done: <div class="timeline-icon not-started">✗</div>
-</text>
+==In Work: <div class="timeline-icon in-progress">✗</div>==
+
+==Not Done: <div class="timeline-icon not-started">✗</div>==
+
